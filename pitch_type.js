@@ -80,7 +80,7 @@ model.compile({
   metrics: ["accuracy"]
 });
 
-//Returns the pitch class evaluation percentages for training data
+// Returns pitch class evaluation percentages for training data
 // with an option to include test data
 async function evaluate(useTestData) {
   let results = {};
@@ -93,6 +93,7 @@ async function evaluate(useTestData) {
       };
     }
   });
+
   if (useTestData) {
     await testValidationData.forEachAsync(pitchTypeBatch => {
       const values = model.predict(pitchTypeBatch.xs).dataSync();
@@ -109,13 +110,11 @@ async function evaluate(useTestData) {
   return results;
 }
 
-async function predcitSample(sample) {
-  let results = model
-    .predict(tf.tensor(sample, [1, sample.length]))
-    .arraySync();
+async function predictSample(sample) {
+  let result = model.predict(tf.tensor(sample, [1, sample.length])).arraySync();
   var maxValue = 0;
   var predictedPitch = 7;
-  for (let i = 0; i < NUM_PITCH_CLASSES; i++) {
+  for (var i = 0; i < NUM_PITCH_CLASSES; i++) {
     if (result[0][i] > maxValue) {
       predictedPitch = i;
       maxValue = result[0][i];
